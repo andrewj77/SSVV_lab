@@ -114,8 +114,12 @@ public class Service {
      * @param tema  - tema pe care o adauga
      * @return null daca s-a facut adaugarea sau tema daca aceasta exista deja
      */
-    public Tema addTema(Tema tema){
+    public Tema addTema(Tema tema) throws Exception{
         temaValidator.validate(tema);
+        Tema t = findTema(tema.getID());
+        if(t != null){
+            throw new Exception("Tema exists");
+        }
         return temaFileRepository.save(tema);
     }
 

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ssvv.example.domain.Student;
+import ssvv.example.domain.Tema;
 import ssvv.example.repository.NotaXMLRepo;
 import ssvv.example.repository.StudentXMLRepo;
 import ssvv.example.repository.TemaXMLRepo;
@@ -132,6 +133,19 @@ public class AppTest
         assertThrows(Exception.class,
                 () -> service.addStudent(new Student("1", "example", 1, "whatever@noemail.com")));
 
+    }
+
+    @Test
+    public void tc13_addAssignment_validAssignment_success() throws Exception {
+        service.addTema(new Tema("1", "yes", 12, 13));
+        int size = ((Collection<?>) service.getAllTeme()).size();
+        assertEquals(size, 1);
+    }
+
+    @Test
+    public void tc14_addAssignment_invalidId_exceptionThrown() {
+        assertThrows(Exception.class,
+                () -> service.addTema(new Tema("", "yes", 12, 13)));
     }
 
 }
