@@ -3,6 +3,7 @@ package ssvv.example;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ssvv.example.domain.Nota;
 import ssvv.example.domain.Student;
 import ssvv.example.domain.Tema;
 import ssvv.example.repository.NotaXMLRepo;
