@@ -148,4 +148,47 @@ public class AppTest
                 () -> service.addTema(new Tema("", "yes", 12, 13)));
     }
 
+    @Test
+    public void tc15_addAssignment_existentAssignment_assignmentReturned() throws Exception {
+        service.addTema(new Tema("1", "da", 12, 13));
+        assertThrows(Exception.class,
+                () -> service.addTema(new Tema("1", "da", 12, 13)));
+    }
+
+    @Test
+    public void tc16_addAssignment_validDescription_success() throws Exception {
+        service.addTema(new Tema("1", "da", 12, 13));
+        assertEquals(service.findTema("1").getDescriere(), "da");
+    }
+
+    @Test
+    public void tc17_addAssignment_invalidDescription_exceptionThrown() {
+        assertThrows(Exception.class,
+                () -> service.addTema(new Tema("1", "", 12, 13)));
+    }
+
+    @Test
+    public void tc18_addAssignment_validDeadline_success() throws Exception {
+        service.addTema(new Tema("1", "da", 12, 13));
+        assertEquals(service.findTema("1").getDeadline(), 12);
+    }
+
+    @Test
+    public void tc19_addAssignment_invalidDeadline_exceptionThrown() {
+        assertThrows(Exception.class,
+                () -> service.addTema(new Tema("1", "da", 30, 13)));
+    }
+
+    @Test
+    public void tc20_addAssignment_validReceive_exceptionThrown() throws Exception {
+        service.addTema(new Tema("1", "da", 12, 13));
+        assertEquals(service.findTema("1").getPrimire(), 13);
+    }
+
+    @Test
+    public void tc21_addAssignment_invalidReceive_exceptionThrown() {
+        assertThrows(Exception.class,
+                () -> service.addTema(new Tema("1", "da", 12, 30)));
+    }
+
 }
