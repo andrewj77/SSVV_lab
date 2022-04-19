@@ -26,8 +26,7 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class IntegrationTests
-{
+public class IntegrationTests {
     private Service service;
     private Service service2;
 
@@ -96,5 +95,19 @@ public class IntegrationTests
         assertEquals(size1, 1);
         assertEquals(size2, 1);
         assertEquals(size3, 1);
+    }
+
+    @Test
+    public void tc_5_bigBangIntegration_addAssignment_Student() throws Exception {
+        service.addTema(new Tema("1", "integration", 12, 14));
+        service.addStudent(new Student("1", "Ion", 1, "ionFighterXxX@gmail.com"));
+
+        int assignmentSize = ((Collection<?>) service.getAllTeme()).size();
+        int studentSize = ((Collection<?>) service.getAllTeme()).size();
+
+        assertEquals(assignmentSize, 1);
+        assertEquals(studentSize, 1);
+
+
     }
 }
