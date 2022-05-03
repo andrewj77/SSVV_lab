@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -190,6 +191,97 @@ public class AppTest
     public void tc21_addAssignment_invalidReceive_exceptionThrown() {
         assertThrows(Exception.class,
                 () -> service.addTema(new Tema("1", "da", 12, 30)));
+    }
+
+    //SBTM 45 minutes session
+
+    @Test
+    public void tc22_addGrade_validGrade_gradeAdded() throws Exception {
+        service.addTema(new Tema("1", "integration", 12, 14));
+        service.addStudent(new Student("1", "example", 1, "whatever@noemail.com"));
+        service.addNota(new Nota("1", "1", "1", 5.5, LocalDate.of(2018, 11, 1)), "done");
+        int size = ((Collection<?>) service.getAllNote()).size();
+        assertEquals(size, 1);
+    }
+
+    @Test
+    public void tc23_addGrade_gradeWithInvalidStudent_exceptionThrown() throws Exception {
+        service.addTema(new Tema("1", "integration", 12, 14));
+        assertThrows(Exception.class,
+                () -> service.addNota(new Nota("1", "1", "1", 5.5, LocalDate.of(2018, 11, 1)), "done"));
+    }
+
+    @Test
+    public void tc24_addGrade_gradeWithInvalidAssignment_exceptionThrown() throws Exception {
+        service.addStudent(new Student("1", "example", 1, "whatever@noemail.com"));
+        assertThrows(Exception.class,
+                () -> service.addNota(new Nota("1", "1", "1", 5.5, LocalDate.of(2018, 11, 1)), "done"));
+    }
+
+    @Test
+    public void tc25_addGrade_gradeWithoutFeedback_gradeAdded() throws Exception {
+        service.addTema(new Tema("1", "integration", 12, 14));
+        service.addStudent(new Student("1", "example", 1, "whatever@noemail.com"));
+        service.addNota(new Nota("1", "1", "1", 5.5, LocalDate.of(2018, 11, 1)), "");
+        int size = ((Collection<?>) service.getAllNote()).size();
+        assertEquals(size, 1);
+    }
+
+    @Test
+    public void tc26_addGrade_gradeBiggerThan10_exceptionThrown() throws Exception {
+        service.addTema(new Tema("1", "integration", 12, 14));
+        service.addStudent(new Student("1", "example", 1, "whatever@noemail.com"));
+        assertThrows(Exception.class,
+                () -> service.addNota(new Nota("1", "1", "1", 11, LocalDate.of(2018, 11, 1)), "done"));
+    }
+
+    @Test
+    public void tc26_addGrade_gradeLowerThan0_exceptionThrown() throws Exception {
+        service.addTema(new Tema("1", "integration", 12, 14));
+        service.addStudent(new Student("1", "example", 1, "whatever@noemail.com"));
+        assertThrows(Exception.class,
+                () -> service.addNota(new Nota("1", "1", "1", -1, LocalDate.of(2018, 11, 1)), "done"));
+    }
+
+    @Test
+    public void tc27_addGrade_1DayDelay_gradeDeducted() throws Exception {
+        service.addTema(new Tema("1", "integration", 14, 14));
+        service.addStudent(new Student("1", "example", 1, "whatever@noemail.com"));
+        service.addNota(new Nota("1", "1", "1", 5.5, LocalDate.of(2018, 11, 1)), "done");
+        assertEquals(service.findNota("1").getNota(), 3.0);
+    }
+
+    @Test public void tc28_addGrade_alreadyExistingGrade_gradeReturned() throws Exception {
+        service.addTema(new Tema("1", "integration", 14, 14));
+        service.addStudent(new Student("1", "example", 1, "whatever@noemail.com"));
+        service.addNota(new Nota("1", "1", "1", 5.5, LocalDate.of(2018, 11, 1)), "done");
+        assertEquals(service.addNota(new Nota("1", "1", "1", 5.5, LocalDate.of(2018, 11, 1)), "done").getID(), service.getAllNote().iterator().next().getID());
+    }
+
+    // icremental testing
+
+    @Test
+    public void tc1_incrementalIntegration_addStudent() throws Exception {
+        service.addStudent(new Student("1", "example", 1, "whatever@noemail.com"));
+        assertEquals(service.findStudent("1").getID(), "1");
+    }
+
+    @Test
+    public void tc2_incrementalIntegration_addStudent_addAssignment() throws Exception {
+        service.addStudent(new Student("1", "example", 1, "whatever@noemail.com"));
+        assertEquals(service.findStudent("1").getID(), "1");
+        service.addTema(new Tema("1", "da", 12, 13));
+        assertEquals(service.findTema("1").getID(), "1");
+    }
+
+    @Test
+    public void tc3_incrementalIntegration_addStudent_addAssignment_addGrade() throws Exception {
+        service.addStudent(new Student("1", "example", 1, "whatever@noemail.com"));
+        assertEquals(service.findStudent("1").getID(), "1");
+        service.addTema(new Tema("1", "da", 12, 13));
+        assertEquals(service.findTema("1").getID(), "1");
+        service.addNota(new Nota("1", "1", "1", 5.5, LocalDate.of(2018, 11, 1)), "done");
+        assertEquals(service.findNota("1").getID(), "1");
     }
 
 }
